@@ -1,31 +1,39 @@
 import random
 import openai
+import json
+import os
 
-# Configure OpenAI API key
-openai.api_key = 'your_openai_api_key_here'
+# Load API key from environment variable for security
+openai.api_key = os.getenv('openaikey')
+
+if not openai.api_key:
+    raise EnvironmentError("Please set the OPENAI_API_KEY environment variable.")
 
 def fetch_questions_from_chatgpt(topic, level):
     prompt = (
         f"Generate 3 {level} level quiz questions on the topic '{topic}'. "
-        "Format the response as a list of dictionaries with 'question' and 'answer' keys."
+        "Respond strictly in JSON format as a list of dictionaries, each with 'question' and 'answer'."
     )
-    
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a helpful quiz generator."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    
-    content = response.choices[0].message['content']
+
     try:
-        questions = eval(content)
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful quiz generator."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        content = response['choices'][0]['message']['content']
+        questions = json.loads(content)
+        return questions
+
+    except json.JSONDecodeError as e:
+        print("Failed to decode JSON response from ChatGPT:", e)
     except Exception as e:
-        print("Failed to parse questions from ChatGPT:", e)
-        questions = []
-    
-    return questions
+        print("An error occurred while fetching questions:", e)
+
+    return []
 
 def quiz_user(topic, level):
     questions = fetch_questions_from_chatgpt(topic, level)
@@ -35,7 +43,7 @@ def quiz_user(topic, level):
         return
 
     random.shuffle(questions)
-    
+
     for q in questions:
         input(f'Question: {q["question"]}\nYour answer (press enter to reveal): ')
         print(f'Correct Answer: {q["answer"]}\n')
