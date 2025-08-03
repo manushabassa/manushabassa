@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Script Scraper",
+  "version": "1.0",
+  "description": "Scrape subtitles or auto-transcribe YouTube videos.",
+  "permissions": ["scripting", "activeTab", "downloads"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/watch*"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": ["*://*.youtube.com/*"]
+}
