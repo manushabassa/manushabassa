@@ -1,0 +1,11 @@
+pip install openai SpeechRecognition pyttsx3 pyaudio
+# On Windows, if PyAudio fails:
+#   pip install pipwin && pipwin install pyaudio
+
+# PowerShell
+$env:OPENAI_API_KEY="sk-..."
+python main.py
+
+# macOS/Linux
+export OPENAI_API_KEY="sk-..."
+python3 main.py
