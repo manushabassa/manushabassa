@@ -1,0 +1,25 @@
+# Compiled object files
+*.o
+*.out
+
+# Python cache directories
+__pycache__/
+*.py[cod]
+
+# Go build artifacts
+bin/
+*.exe
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Node modules (if any)
+node_modules/
+
+# OS-specific files
+.DS_Store
